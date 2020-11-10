@@ -50,6 +50,9 @@ jobs:
         id: west-build-SHIELD_NAME
         with:
           args: 'build "-s zmk/app -b BOARD_NAME -- -DSHIELD=SHIELD_NAME -DZMK_CONFIG=/github/workspace/config"'
+      - name: KEYBOARD_TITLE DTS File
+        if: ${{ always() }}
+        run: cat -n build/zephyr/BOARD_NAME.dts.pre.tmp
       - name: KEYBOARD_TITLE Kconfig file
         run: cat build/zephyr/.config | grep -v "^#" | grep -v "^$"
       - name: Rename zmk.uf2
