@@ -73,7 +73,7 @@ RC(4,1) RC(4,2) RC(4,3)                 RC(4,6)                 RC(4,9)  RC(4,10
 		gpio-controller;
 		reg = <0x20>;
 		label = "MCP_IO";
-		// gpio-cells = <2>;
+		#gpio-cells = <2>;
 		ngpios = <16>;
 	};
 };
