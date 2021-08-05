@@ -40,10 +40,12 @@ jobs:
         run: cat -n build/zephyr/Lab68.dts.pre.tmp || find . -iname particle_xenon.dts.pre.tmp -exec cat -n {} \; -print
       - name: Lab68 Kconfig file
         run: cat build/zephyr/.config | grep -v "^#" | grep -v "^$"
+      - name: Generate UF2 file
+        run: find . -name zmk.bin -print ; python3 ./tools/uf2/utils/uf2conv.py -c -b 0x26000 -f 0xADA52840 -o build/zephyr/zmk.uf2 build/zephyr/zmk.bin
       - name: Rename zmk.uf2
-        run: ls -lah build/zephyr && cp build/zephyr/zmk.uf2 Lab68.uf2
+        run: cp build/zephyr/zmk.uf2 Lab68.uf2 && cp build/zephyr/zmk.bin Lab68.bin
       - name: Archive (Lab68)
         uses: actions/upload-artifact@v2
         with:
           name: firmware
-          path: Lab68.uf2
+          path: Lab68.*
