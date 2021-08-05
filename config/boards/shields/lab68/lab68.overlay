@@ -1,0 +1,59 @@
+/*
+ * Copyright (c) 2020 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <dt-bindings/zmk/matrix-transform.h>
+
+/ {
+	chosen {
+		zmk,kscan = &kscan0;
+	};
+
+	kscan0: kscan {
+		compatible = "zmk,kscan-gpio-matrix";
+		label = "KSCAN";
+		diode-direction = "col2row";
+
+		col-gpios
+			= <&mcp_io 8 (GPIO_ACTIVE_LOW)>
+			, <&mcp_io 9 (GPIO_ACTIVE_LOW)>
+			, <&mcp_io 10 (GPIO_ACTIVE_LOW)>
+			, <&mcp_io 11 (GPIO_ACTIVE_LOW)>
+			, <&mcp_io 12 (GPIO_ACTIVE_LOW)>
+			, <&mcp_io 13 (GPIO_ACTIVE_LOW)>
+			, <&mcp_io 14 (GPIO_ACTIVE_LOW)>
+			, <&mcp_io 15 (GPIO_ACTIVE_LOW)>
+			, <&mcp_io 4 (GPIO_ACTIVE_LOW)>
+			, <&mcp_io 5 (GPIO_ACTIVE_LOW)>
+			, <&mcp_io 6 (GPIO_ACTIVE_LOW)>
+			, <&mcp_io 7 (GPIO_ACTIVE_LOW)>
+			, <&mcp_io 3 (GPIO_ACTIVE_LOW)>
+			, <&mcp_io 2 (GPIO_ACTIVE_LOW)>
+			, <&mcp_io 1 (GPIO_ACTIVE_LOW)>
+			;
+		row-gpios
+			= <&gpio1 12 (GPIO_ACTIVE_HIGH)>
+			, <&gpio1 11 (GPIO_ACTIVE_HIGH)>
+			, <&gpio1 10 (GPIO_ACTIVE_HIGH)>
+			, <&gpio1 2 (GPIO_ACTIVE_HIGH)>
+			, <&gpio1 1 (GPIO_ACTIVE_HIGH)>
+			;
+	};
+};
+
+&i2c2 {
+	status = "okay";
+	clock-frequency = <I2C_BITRATE_FAST>;
+
+	mcp_io: mcp23017@20 {
+		compatible = "microchip,mcp23017";
+		status = "okay";
+		gpio-controller;
+		reg = <0x20>;
+		label = "MCP_IO";
+		#gpio-cells = <2>;
+		ngpios = <16>;
+	};
+};
