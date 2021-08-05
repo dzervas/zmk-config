@@ -34,7 +34,7 @@ jobs:
       - name: West Zephyr Export
         run: west zephyr-export
       - name: West Build (Lab68)
-        run: west build -s zmk/app -b nice_nano -- -DSHIELD=LAB68 -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
+        run: west build -s zmk/app -b particle_xenon -- -DSHIELD=lab68 -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
       - name: Lab68 DTS File
         if: ${{ always() }}
         run: cat -n build/zephyr/Lab68.dts.pre.tmp
