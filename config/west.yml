@@ -2,10 +2,15 @@ manifest:
   remotes:
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
+    - name: petejohanson
+      url-base: https://github.com/petejohanson
+    - name: dzervas
+      url-base: https://github.com/dzervas
   projects:
     - name: zmk
-      remote: zmkfirmware
-      revision: main
+      # remote: zmkfirmware
+      remote: petejohanson
+      revision: boards/ferris-02-bling-basics
       import: app/west.yml
   self:
     path: config
