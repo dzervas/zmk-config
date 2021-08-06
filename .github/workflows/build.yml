@@ -41,9 +41,9 @@ jobs:
       - name: Lab68 Kconfig file
         run: cat build/zephyr/.config | grep -v "^#" | grep -v "^$"
       - name: Generate UF2 file
-        run: find . -name zmk.bin -print ; python3 ./tools/uf2/utils/uf2conv.py -c -b 0x26000 -f 0xADA52840 -o build/zephyr/zmk.uf2 build/zephyr/zmk.bin
+        run: python3 ./tools/uf2/utils/uf2conv.py -c -b 0x26000 -f 0xADA52840 -o build/zephyr/zmk.uf2 build/zephyr/zmk.bin
       - name: Rename zmk.uf2
-        run: cp build/zephyr/zmk.uf2 Lab68.uf2 && cp build/zephyr/zmk.bin Lab68.bin
+        run: cp build/zephyr/zmk.uf2 Lab68.uf2 && cp build/zephyr/zmk.bin Lab68.bin && cp build/zephyr/zmk.hex Lab68.hex && cp build/zephyr/zmk.elf Lab68.elf
       - name: Archive (Lab68)
         uses: actions/upload-artifact@v2
         with:

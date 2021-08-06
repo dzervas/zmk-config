@@ -8,6 +8,9 @@
 #include <dt-bindings/zmk/matrix_transform.h>
 
 / {
+	model = "lab68";
+	compatible = "dzervas,lab68";
+
 	chosen {
 		zephyr,code-partition = &code_partition;
 		zephyr,sram = &sram0;
