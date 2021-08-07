@@ -73,14 +73,20 @@ RC(3,0) RC(3,1) RC(3,2) RC(3,3) RC(3,4) RC(3,5) RC(3,6) RC(3,7) RC(3,8)  RC(3,9)
 RC(4,0) RC(4,1) RC(4,2)                 RC(4,5)                 RC(4,8)  RC(4,9) RC(4,10) RC(4,11)          RC(4,13) RC(4,14)
 		>;
 	};
+
+
+	main_encoder: encoder_main {
+		compatible = "alps,ec11";
+		label = "MAIN_ENCODER";
+		a-gpios = <&gpio0 30 (GPIO_ACTIVE_LOW | GPIO_PULL_DOWN)>;
+		b-gpios = <&gpio0 31 (GPIO_ACTIVE_LOW | GPIO_PULL_DOWN)>;
+		resolution = <4>;
+	};
 };
 
 &i2c0 {
 	status = "okay";
 	clock-frequency = <I2C_BITRATE_FAST>;
-
-	// sda-pin = <26>;
-	// scl-pin = <27>;
 
 	mcp_io: mcp23017@20 {
 		compatible = "microchip,mcp23017";
@@ -91,9 +97,29 @@ RC(4,0) RC(4,1) RC(4,2)                 RC(4,5)                 RC(4,8)  RC(4,9)
 		#gpio-cells = <2>;
 		ngpios = <16>;
 	};
+
+	oled: ssd1306@3c {
+		compatible = "solomon,ssd1306fb";
+		reg = <0x3c>;
+		label = "DISPLAY";
+		width = <128>;
+		height = <32>;
+		segment-offset = <0>;
+		page-offset = <0>;
+		display-offset = <0>;
+		multiplex-ratio = <31>;
+		com-invdir;
+		segment-remap;
+		com-sequential;
+		prechargep = <0x22>;
+	};
 };
 
 &adc {
+	status = "okay";
+};
+
+&main_encoder {
 	status = "okay";
 };
 
