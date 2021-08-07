@@ -15,7 +15,7 @@
 		zephyr,code-partition = &code_partition;
 		zephyr,sram = &sram0;
 		zephyr,flash = &flash0;
-		zmk,kscan = &kscan0;
+		zmk,kscan = &matrix_kscan;
 		zmk,matrix_transform = &default_transform;
 	};
 
@@ -27,9 +27,25 @@
 		full-ohms = <(2100000 + 806000)>;
 	};
 
-	kscan0: kscan {
-		compatible = "zmk,kscan-gpio-matrix";
+	kscan: kscan {
+		compatible = "zmk,kscan-composite";
 		label = "KSCAN";
+		rows = <5>;
+		columns = <15>;
+
+		matrix_kscan {
+			kscan = <&matrix_kscan>;
+		};
+
+		encoder_kscan {
+			kscan = <&encoder_kscan>;
+			column-offset = <15>;
+		};
+	};
+
+	matrix_kscan: kscan0 {
+		compatible = "zmk,kscan-gpio-matrix";
+		label = "matrix_kscan";
 		diode-direction = "col2row";
 
 		col-gpios
@@ -58,6 +74,14 @@
 			;
 	};
 
+	encoder_kscan: kscan1 {
+		compatible = "zmk,kscan-gpio-direct";
+		label = "encoder_kscan";
+		input-gpios
+			= <&gpio0 29 (GPIO_ACTIVE_LOW)>
+			;
+	};
+
 	default_transform: keymap_transform_0 {
 		compatible = "zmk,matrix-transform";
 		columns = <15>;
@@ -75,11 +99,11 @@ RC(4,0) RC(4,1) RC(4,2)                 RC(4,5)                 RC(4,8)  RC(4,9)
 	};
 
 
-	main_encoder: encoder_main {
+	encoder0: encoder0 {
 		compatible = "alps,ec11";
 		label = "MAIN_ENCODER";
-		a-gpios = <&gpio0 30 (GPIO_ACTIVE_LOW | GPIO_PULL_DOWN)>;
-		b-gpios = <&gpio0 31 (GPIO_ACTIVE_LOW | GPIO_PULL_DOWN)>;
+		a-gpios = <&gpio0 30 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+		b-gpios = <&gpio0 31 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
 		resolution = <4>;
 	};
 };
@@ -119,7 +143,7 @@ RC(4,0) RC(4,1) RC(4,2)                 RC(4,5)                 RC(4,8)  RC(4,9)
 	status = "okay";
 };
 
-&main_encoder {
+&encoder0 {
 	status = "okay";
 };
 
