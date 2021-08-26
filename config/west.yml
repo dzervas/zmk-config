@@ -14,6 +14,6 @@ manifest:
       import: app/west.yml
     - name: mcuboot
       remote: runtimeco
-      revision: main
+      revision: v1.7.2
   self:
     path: config

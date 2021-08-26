@@ -23,6 +23,7 @@ jobs:
             bootloader/
             zmk/
             mcuboot/
+            !mcuboot/signing-key-ed25519.pem
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('manifest-dir/west.yml') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -34,19 +35,23 @@ jobs:
         run: west update
       - name: West Zephyr Export
         run: west zephyr-export
+      - name: Install MCUBoot requirements
+        run: apt-get update && apt-get install -y python3-pip && pip3 install -r mcuboot/scripts/requirements.txt && pip3 install imgtool
       - name: West Build (Lab68 MCUBoot)
         run: west build -b particle_xenon -d build-mcuboot mcuboot/boot/zephyr -- '-DDTC_OVERLAY_FILE=../../config/boards/shields/lab68/lab68_mcuboot.overlay' '-DOVERLAY_CONFIG=../../../config/boards/shields/lab68/lab68_defconfig'
       - name: West Build (Lab68 ZMK)
         run: west build -s zmk/app -b particle_xenon -d build-zmk -- -DSHIELD=lab68 -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
+      - name: Write Signing Key
+        run: echo "${{ secrets.MCUBOOT_SIGNING_KEY }}" > mcuboot/signing-key-ed25519.pem
       - name: Sign ZMK Image
-        run: west sign -t imgtool --no-hex --bin -d build-zmk -B lab68.signed.bin -- --key mcuboot/root-rsa-2048.pem
+        run: west sign -t imgtool --no-hex --bin -d build-zmk -B lab68.signed.img -- --key mcuboot/signing-key-ed25519.pem
       - name: Lab68 DTS File
         if: ${{ always() }}
         run: cat -n build-zmk/zephyr/Lab68.dts.pre.tmp || find . -iname particle_xenon.dts.pre.tmp -exec cat -n {} \; -print
       - name: Lab68 Kconfig file
         run: cat build-zmk/zephyr/.config | grep -v "^#" | grep -v "^$"
       - name: Rename zmk.uf2
-        run: cp build-mcuboot/zephyr/zephyr.bin mcuboot.bin && cp build/zephyr/zephyr.hex mcuboot.hex
+        run: cp build-mcuboot/zephyr/zephyr.bin mcuboot.bin && cp build-mcuboot/zephyr/zephyr.hex mcuboot.hex && cp build-zmk/zephyr/zmk.bin lab68.bin && cp build-zmk/zephyr/zmk.hex lab68.hex
       - name: Archive (Lab68)
         uses: actions/upload-artifact@v2
         with:
