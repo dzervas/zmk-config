@@ -1,6 +1,9 @@
 .west/
 build/
+build-mcuboot/
+build-zmk/
 modules/
 tools/
 zephyr/
 zmk/
+mcuboot/

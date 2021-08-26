@@ -2,15 +2,18 @@ manifest:
   remotes:
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
-    - name: petejohanson
-      url-base: https://github.com/petejohanson
     - name: dzervas
       url-base: https://github.com/dzervas
+    - name: runtimeco
+      url-base: https://github.com/runtimeco
   projects:
     - name: zmk
       # remote: zmkfirmware
       remote: dzervas
-      revision: boards/ferris-02-bling-basics
+      revision: main
       import: app/west.yml
+    - name: mcuboot
+      remote: runtimeco
+      revision: main
   self:
     path: config
