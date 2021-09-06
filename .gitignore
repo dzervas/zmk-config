@@ -7,3 +7,4 @@ tools/
 zephyr/
 zmk/
 mcuboot/
+zmk.signed.bin
