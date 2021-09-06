@@ -1,11 +1,13 @@
 manifest:
   remotes:
-    - name: zmkfirmware
-      url-base: https://github.com/zmkfirmware
     - name: dzervas
       url-base: https://github.com/dzervas
     - name: runtimeco
       url-base: https://github.com/runtimeco
+    - name: zephyr
+      url-base: https://github.com/zephyrproject-rtos
+    - name: zmkfirmware
+      url-base: https://github.com/zmkfirmware
   projects:
     - name: zmk
       # remote: zmkfirmware
@@ -13,7 +15,7 @@ manifest:
       revision: main
       import: app/west.yml
     - name: mcuboot
-      remote: runtimeco
+      remote: zephyr
       revision: v1.7.2
   self:
     path: config
