@@ -16,6 +16,7 @@ manifest:
       import: app/west.yml
     - name: mcuboot
       remote: zephyr
-      revision: v1.7.2
+      # Taken from zephyr/west.yml that ZMK uses - should be on par with it
+      revision: 3fc59410b633a6d83bbb534e43aac43160f9bd32
   self:
     path: config

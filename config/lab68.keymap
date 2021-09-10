@@ -23,8 +23,8 @@
 
         default_layer {
             bindings = <
-&kp GRAVE  &kp NUM_1 &kp NUM_2 &kp NUM_3 &kp NUM_4 &kp NUM_5 &kp NUM_6 &kp NUM_7 &kp NUM_8 &kp NUM_9 &kp NUM_0 &kp MINUS &kp EQL  &kp BKSP &kp DEL  &kp RET
-&kp TAB    &kp Q     &kp W     &kp E     &kp R     &kp T     &kp Y     &kp U     &kp I     &kp O     &kp P     &kp LBKT  &kp RBKT &kp BSLH &kp PGUP
+&kp GRAVE  &kp NUM_1 &kp NUM_2 &kp NUM_3 &kp NUM_4 &kp NUM_5 &kp NUM_6 &kp NUM_7 &kp NUM_8 &kp NUM_9 &kp NUM_0 &kp MINUS &kp EQL  &kp BSLH &kp DEL  &kp RET
+&kp TAB    &kp Q     &kp W     &kp E     &kp R     &kp T     &kp Y     &kp U     &kp I     &kp O     &kp P     &kp LBKT  &kp RBKT &kp BKSP &kp PGUP
 &kp ESC    &kp A     &kp S     &kp D     &kp F     &kp G     &kp H     &kp J     &kp K     &kp L     &kp SCLN  &kp QUOT           &kp RET  &kp PGDN
 &kp LSFT   &kp Z     &kp X     &kp C     &kp V     &kp B     &kp N     &kp M     &kp CMMA  &kp DOT   &kp FSLH  &kp RSFT           &kp UARW &kp INSERT
 &kp LCTL   &kp LGUI  &kp LALT                      &kp SPC                       &mo FUNC  &kp RALT  &kp RCTL  &kp LARW           &kp DARW &kp RARW
