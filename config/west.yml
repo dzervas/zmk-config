@@ -10,8 +10,7 @@ manifest:
       url-base: https://github.com/zmkfirmware
   projects:
     - name: zmk
-      # remote: zmkfirmware
-      remote: dzervas
+      remote: zmkfirmware
       revision: main
       import: app/west.yml
     - name: mcuboot
