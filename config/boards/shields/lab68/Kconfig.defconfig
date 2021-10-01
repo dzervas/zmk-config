@@ -9,6 +9,18 @@ config BOARD
 config ZMK_KEYBOARD_NAME
 	default "Lab68"
 
+config I2C
+	default y
+
+config GPIO_MCP23017
+	default y
+
+config EC11
+	default y
+
+# config EC11_TRIGGER_GLOBAL_THREAD
+	# default y
+
 if USB
 
 config USB_NRFX
@@ -55,17 +67,58 @@ endchoice
 
 endif # LVGL
 
-config BT_CTLR
-	default BT
-
 config ZMK_BLE
 	default y
 
 config ZMK_USB
 	default y
 
+config ZMK_KSCAN_MATRIX_POLLING
+	default y
+
+config ZMK_KSCAN_COMPOSITE_DRIVER
+	default y
+
 config ZMK_BATTERY_VOLTAGE_DIVIDER
 	default y
 
-endif
+# Bluetooth settings
+config BT_CTLR
+	default BT
 
+config BT_BONDING_REQUIRED
+	default y
+
+config BT_SMP_SC_ONLY
+	default y
+
+config BT_SETTINGS_CCC_STORE_ON_WRITE
+	default y
+
+# Hardware stuff
+config HW_STACK_PROTECTION
+	default y
+
+config MPU_ALLOW_FLASH_WRITE
+	default y
+
+config NVS
+	default y
+
+# config SETTINGS_NVS
+	# default y
+
+config FLASH
+	default y
+
+config FLASH_MAP
+	default y
+
+# MCUBoot
+config BOOTLOADER_MCUBOOT
+	default y
+
+config ROM_START_OFFSET
+	default 0x200
+
+endif

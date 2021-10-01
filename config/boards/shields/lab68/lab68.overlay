@@ -50,21 +50,21 @@
 		diode-direction = "col2row";
 
 		col-gpios
-			= <&mcp_io 8 (GPIO_ACTIVE_HIGH)>
-			, <&mcp_io 9 (GPIO_ACTIVE_HIGH)>
-			, <&mcp_io 10 (GPIO_ACTIVE_HIGH)>
-			, <&mcp_io 11 (GPIO_ACTIVE_HIGH)>
-			, <&mcp_io 12 (GPIO_ACTIVE_HIGH)>
-			, <&mcp_io 13 (GPIO_ACTIVE_HIGH)>
-			, <&mcp_io 14 (GPIO_ACTIVE_HIGH)>
-			, <&mcp_io 15 (GPIO_ACTIVE_HIGH)>
-			, <&mcp_io 4 (GPIO_ACTIVE_HIGH)>
-			, <&mcp_io 5 (GPIO_ACTIVE_HIGH)>
-			, <&mcp_io 6 (GPIO_ACTIVE_HIGH)>
-			, <&mcp_io 7 (GPIO_ACTIVE_HIGH)>
-			, <&mcp_io 3 (GPIO_ACTIVE_HIGH)>
-			, <&mcp_io 2 (GPIO_ACTIVE_HIGH)>
-			, <&mcp_io 1 (GPIO_ACTIVE_HIGH)>
+			= <&mcp_io 8 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 9 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 10 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 11 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 12 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 13 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 14 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 15 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
 			;
 		row-gpios
 			= <&gpio1 12 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>

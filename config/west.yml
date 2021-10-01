@@ -12,6 +12,7 @@ manifest:
     - name: zmk
       remote: zmkfirmware
       revision: main
+      # revision: e42590a049f256953ba7edfa4d7cd7f8280731b9
       import: app/west.yml
     - name: mcuboot
       remote: zephyr
