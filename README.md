@@ -1,21 +1,40 @@
+# First time setup
+
+```bash
+# You need go, openocd and pip3 system packages. For Arch Linux
+sudo pacman -S go openocd python3-pip
+# Get imgtool (image signing) & west (building)
+pip3 install --user -U imgtool west
+# Get MCUmgr (for ZMK flashing)
+go get github.com/apache/mynewt-mcumgr-cli/mcumgr
+# Init local west
+west init -l config
+# Update local repos - will take some time
+west update
+# Dunno what this does but ZMK says it's needed
+west zephyr-export
+# Install project dependencies
+pip3 install --user -r zephyr/scripts/requirements.txt
+pip3 install --user -r mcuboot/scripts/requirements.txt
+# Generate a signing key (KEEP THIS SAFE)
+imgtool keygen -k mcuboot/signing-key-ed25519.pem -t ed25519
+```
+
 # Build & Flash MCUBoot
 
-Generate a signing key (or use the old one): `imgtool keygen -k mcuboot/signing-key-ed25519.pem -t ed25519`
-
-`west build -b particle_xenon -p always -d build-mcuboot mcuboot/boot/zephyr -- '-DDTC_OVERLAY_FILE=../../config/boards/shields/lab68/lab68_mcuboot.overlay' '-DOVERLAY_CONFIG=../../../config/boards/shields/lab68/lab68_mcuboot_defconfig'`
-
-`openocd -f interface/cmsis-dap.cfg -f nrf52-particle.cfg -c "init" -c "reset init" -c "halt" -c "program $(pwd)/build-mcuboot/zephyr/zephyr.hex 0x0 verify reset" -c "exit"`
-
-Now hold the button and insert USB
+```bash
+# Assuming Particle Debugger (CMSIS-DAP) and OpenOCD
+make flash_mcuboot
+```
 
 # Build & Flash ZMK
 
-`west build -s zmk/app -b particle_xenon -p always -d build-zmk -- -DSHIELD=lab68 -DZMK_CONFIG="$(pwd)/config"`
+Remove the debugger and the board from USB.
+Hold the user button and insert the USB in the device so that it enters MCUBoot
 
-`west sign -t imgtool --no-hex --bin -d build-zmk -B zmk.signed.bin -- --key mcuboot/signing-key-ed25519.pem`
+```bash
+# You can change the serial device by appending FLASH_DEVICE=/dev/ttyACM9
+make flash
+```
 
-Get MCUMGR: `go get github.com/apache/mynewt-mcumgr-cli/mcumgr`
-
-Get imgtool: `pip3 install --user -U imgtool`
-
-Flash ZMK (hold MODE button and insert device in USB): `mcumgr --conntype=serial --connstring='dev=/dev/ttyACM0,baud=115200' image upload -e zmk.signed.bin`
+Reset the device and you're done!

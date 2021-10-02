@@ -18,9 +18,6 @@ config GPIO_MCP23017
 config EC11
 	default y
 
-# config EC11_TRIGGER_GLOBAL_THREAD
-	# default y
-
 if USB
 
 config USB_NRFX
@@ -104,9 +101,6 @@ config MPU_ALLOW_FLASH_WRITE
 
 config NVS
 	default y
-
-# config SETTINGS_NVS
-	# default y
 
 config FLASH
 	default y
