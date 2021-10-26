@@ -114,17 +114,20 @@ RC(4,0) RC(4,1) RC(4,2)                 RC(4,5)                 RC(4,8)  RC(4,9)
 	mcp_io: mcp23017@20 {
 		compatible = "microchip,mcp23017";
 		status = "okay";
-		gpio-controller;
 		reg = <0x20>;
 		label = "MCP_IO";
+
+		gpio-controller;
 		#gpio-cells = <2>;
 		ngpios = <16>;
 	};
 
 	oled: ssd1306@3c {
 		compatible = "solomon,ssd1306fb";
+		status = "okay";
 		reg = <0x3c>;
 		label = "DISPLAY";
+
 		width = <128>;
 		height = <32>;
 		segment-offset = <0>;
