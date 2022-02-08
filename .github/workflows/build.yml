@@ -47,7 +47,7 @@ jobs:
       - name: Lab68 Kconfig file
         run: cat build-zmk/zephyr/.config | grep -v "^#" | grep -v "^$"
 
-      - name: Rename zmk.uf2
+      - name: Rename files
         run: cp build-mcuboot/zephyr/zephyr.bin mcuboot.bin && cp build-mcuboot/zephyr/zephyr.hex mcuboot.hex && cp build-zmk/zephyr/zmk.bin lab68.bin && cp build-zmk/zephyr/zmk.hex lab68.hex
       - name: Archive (Lab68)
         uses: actions/upload-artifact@v2
@@ -57,3 +57,45 @@ jobs:
             lab68.*
             mcuboot.*
           if-no-files-found: error
+          
+      - name: Get ZMK commit
+        run: echo "ZMK_COMMIT=$(git --git-dir zmk/.git rev-parse --short HEAD)" >> $GITHUB_ENV 
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.ZMK_COMMIT }}
+          release_name: Release ${{ env.ZMK_COMMIT }}
+          body: |
+            To flash lab68:
+            ```bash
+            wget https://github.com/dzervas/zmk-config/releases/download/${{ env.ZMK_COMMIT }}/lab68.bin -O /tmp/lab68.bin && \
+            go get -u github.com/apache/mynewt-mcumgr-cli/mcumgr && \
+            mcumgr --conntype=serial --connstring='dev=/dev/ttyUSB0,baud=115200' image upload -e lab68.bin
+            ```
+            
+            To flash mcuboot (connect Particle Debugger and install openocd):
+            ```bash
+            wget https://github.com/dzervas/zmk-config/releases/download/${{ env.ZMK_COMMIT }}/mcuboot.hex -O /tmp/mcuboot.hex && \
+            wget https://github.com/dzervas/zmk-config/raw/main/nrf52-particle.cfg -O /tmp/nrf52-particle.cfg && \
+            openocd -f interface/cmsis-dap.cfg -f /tmp/nrf52-particle.cfg -c "init" -c "reset init" -c "halt" -c "program /tmp/mcuboot.hex 0x0 verify reset" -c "exit"
+            ```
+      - name: Upload Release Asset (mcuboot)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./mcuboot.hex
+          asset_name: mcuboot.hex
+      
+      - name: Upload Release Asset (lab68)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./lab68.bin
+          asset_name: lab68.bin
