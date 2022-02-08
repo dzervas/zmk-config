@@ -90,6 +90,7 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
           asset_path: ./mcuboot.hex
           asset_name: mcuboot.hex
+          asset_content_type: text/plain
       
       - name: Upload Release Asset (lab68)
         uses: actions/upload-release-asset@v1
@@ -99,3 +100,4 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./lab68.bin
           asset_name: lab68.bin
+          asset_content_type: application/octet-stream
