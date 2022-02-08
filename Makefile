@@ -41,6 +41,7 @@ flash_mcuboot_clean: clean flash_mcuboot
 
 init:
 	west init -l config
+	west update
 	west zephyr-export
 
 serial:
