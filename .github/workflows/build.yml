@@ -32,8 +32,6 @@ jobs:
 
       - name: West Init
         run: make init
-      - name: West Update
-        run: make update
 
       - name: Install MCUBoot requirements
         run: make ci_setup
