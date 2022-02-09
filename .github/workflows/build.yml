@@ -57,7 +57,7 @@ jobs:
             lab68.*
             mcuboot.*
           if-no-files-found: error
-          
+
       - name: Get ZMK commit
         run: echo "ZMK_COMMIT=$(git --git-dir zmk/.git rev-parse --short HEAD)" >> $GITHUB_ENV 
       - name: Create Release
@@ -73,9 +73,9 @@ jobs:
             ```bash
             wget https://github.com/dzervas/zmk-config/releases/download/${{ env.ZMK_COMMIT }}/lab68.bin -O /tmp/lab68.bin && \
             go get -u github.com/apache/mynewt-mcumgr-cli/mcumgr && \
-            mcumgr --conntype=serial --connstring='dev=/dev/ttyUSB0,baud=115200' image upload -e lab68.bin
+            mcumgr --conntype=serial --connstring='dev=/dev/ttyACM0,baud=115200' image upload -e /tmp/lab68.bin
             ```
-            
+
             To flash mcuboot (connect Particle Debugger and install openocd):
             ```bash
             wget https://github.com/dzervas/zmk-config/releases/download/${{ env.ZMK_COMMIT }}/mcuboot.hex -O /tmp/mcuboot.hex && \
@@ -91,7 +91,7 @@ jobs:
           asset_path: ./mcuboot.hex
           asset_name: mcuboot.hex
           asset_content_type: text/plain
-      
+
       - name: Upload Release Asset (lab68)
         uses: actions/upload-release-asset@v1
         env:
