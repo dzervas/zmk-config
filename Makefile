@@ -5,6 +5,8 @@ BINARY_PATH_MCUBOOT := zephyr/zephyr.hex
 FLASH_DEVICE := /dev/ttyACM0
 SIGNING_KEY := mcuboot/signing-key-ed25519.pem
 
+.PHONY: ci_setup clean flash flash_clean flash_mcuboot flash_mcuboot_clean init serial
+
 all: ${BUILD_DIR_MCUBOOT}/${BINARY_PATH_MCUBOOT} zmk.signed.bin
 
 ${BUILD_DIR_ZMK}/${BINARY_PATH_ZMK}:
