@@ -17,7 +17,6 @@ config GPIO_MCP23017
 
 config EC11
 	default y
-
 if USB
 
 config USB_NRFX
@@ -48,6 +47,7 @@ config LVGL_HOR_RES_MAX
 
 config LVGL_VER_RES_MAX
 	default 32
+
 
 config LVGL_VDB_SIZE
 	default 64
