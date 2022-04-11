@@ -10,9 +10,9 @@ jobs:
     name: Build
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache west modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-zephyr-modules
         with:
@@ -31,15 +31,44 @@ jobs:
             ${{ runner.os }}-
 
       - name: West Init
-        run: make init
+        uses: 'docker://zmkfirmware/zephyr-west-action-arm:latest'
+        with:
+          args: init "-l config"
 
-      - name: Install MCUBoot requirements
-        run: make ci_setup
+      - name: West Update
+        uses: 'docker://zmkfirmware/zephyr-west-action-arm:latest'
+        with:
+          args: update
+
+      - name: West Config Zephyr Base
+        uses: 'docker://zmkfirmware/zephyr-west-action-arm:latest'
+        with:
+          args: config "--global zephyr.base-prefer configfile"
+
+      - name: West Zephyr Export
+        uses: 'docker://zmkfirmware/zephyr-west-action-arm:latest'
+        with:
+          args: zephyr-export
+
+      # - name: Install MCUBoot dependencies
+        # run: make ci_setup
       - name: Write Signing Key
         run: echo "${{ secrets.MCUBOOT_SIGNING_KEY }}" > mcuboot/signing-key-ed25519.pem
 
-      - name: Compile & Sign everything
-        run: make all
+      - name: West Build (mcuboot)
+        uses: 'docker://zmkfirmware/zephyr-west-action-arm:latest'
+        with:
+          args: build -b particle_xenon -d build-mcuboot mcuboot/boot/zephyr -- '-DDTC_OVERLAY_FILE=../../config/boards/shields/lab68/lab68_mcuboot.overlay' '-DOVERLAY_CONFIG=../../../config/boards/shields/lab68/lab68_mcuboot_defconfig'
+
+      - name: West Build (lab68)
+        uses: 'docker://zmkfirmware/zephyr-west-action-arm:latest'
+        with:
+          args: build -s zmk/app -b particle_xenon -d build-zmk -- -DSHIELD=lab68 -DZMK_CONFIG="$(pwd)/config"
+
+      - name: West Sign (lab68)
+        uses: 'docker://zmkfirmware/zephyr-west-action-arm:latest'
+        with:
+          args: sign -t imgtool --no-hex --bin -d build-zmk -B zmk.signed.bin -- --key mcuboot/signing-key-ed25519.pem
 
       - name: Lab68 DTS File
         if: ${{ always() }}
@@ -59,7 +88,7 @@ jobs:
           if-no-files-found: error
 
       - name: Get ZMK commit
-        run: echo "ZMK_COMMIT=$(git --git-dir zmk/.git rev-parse --short HEAD)" >> $GITHUB_ENV 
+        run: echo "ZMK_COMMIT=$(git --git-dir zmk/.git rev-parse --short HEAD)" >> $GITHUB_ENV
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
