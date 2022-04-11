@@ -23,22 +23,22 @@
 
         default_layer {
             bindings = <
-&kp GRAVE  &kp NUM_1 &kp NUM_2 &kp NUM_3 &kp NUM_4 &kp NUM_5 &kp NUM_6 &kp NUM_7 &kp NUM_8 &kp NUM_9 &kp NUM_0 &kp MINUS &kp EQL  &kp BSLH &kp DEL  &kp RET
-&kp TAB    &kp Q     &kp W     &kp E     &kp R     &kp T     &kp Y     &kp U     &kp I     &kp O     &kp P     &kp LBKT  &kp RBKT &kp BKSP &kp PGUP
-&kp ESC    &kp A     &kp S     &kp D     &kp F     &kp G     &kp H     &kp J     &kp K     &kp L     &kp SCLN  &kp QUOT           &kp RET  &kp PGDN
-&kp LSFT   &kp Z     &kp X     &kp C     &kp V     &kp B     &kp N     &kp M     &kp CMMA  &kp DOT   &kp FSLH  &kp RSFT           &kp UARW &kp INSERT
-&kp LCTL   &kp LGUI  &kp LALT                      &kp SPC                       &mo FUNC  &kp RALT  &kp RCTL  &kp LARW           &kp DARW &kp RARW
+&kp GRAVE  &kp N1   &kp N2   &kp N3 &kp N4 &kp N5    &kp N6 &kp N7 &kp N8    &kp N9   &kp N0    &kp MINUS  &kp EQUAL &kp BSLH &kp DEL  &kp RET
+&kp TAB    &kp Q    &kp W    &kp E  &kp R  &kp T     &kp Y  &kp U  &kp I     &kp O    &kp P     &kp LBKT   &kp RBKT  &kp BSPC &kp PG_UP
+&kp ESC    &kp A    &kp S    &kp D  &kp F  &kp G     &kp H  &kp J  &kp K     &kp L    &kp SEMI  &kp SQT    &kp RET            &kp PG_DN
+&kp LSHIFT &kp Z    &kp X    &kp C  &kp V  &kp B     &kp N  &kp M  &kp COMMA &kp DOT  &kp FSLH  &kp RSHIFT &kp UP             &kp INSERT
+&kp LCTRL  &kp LGUI &kp LALT               &kp SPACE               &mo FUNC  &kp RALT &kp RCTRL &kp LEFT   &kp DOWN           &kp RIGHT
             >;
-            sensor-bindings = <&inc_dec_kp RARW LARW>;
+            sensor-bindings = <&inc_dec_kp RIGHT LEFT>;
         };
 
         func_layer {
             bindings = <
-&kp GRAVE   &kp F1       &kp F2        &kp F3        &kp F4     &kp F5     &kp F6       &kp F7       &kp F8      &kp F9      &kp F10    &kp F11           &kp F12     &trans      &bt BT_CLR  &trans
-&kp TAB     &out OUT_BLE &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2     &trans     &trans       &trans       &trans      &kp PSCRN   &trans     &kp PAUSE_BREAK   &trans      &trans      &kp HOME
-&kp ESC     &trans       &trans        &trans        &trans     &trans     &trans       &trans       &trans      &trans      &trans     &trans                            &trans      &kp END
-&kp LSFT    &out OUT_USB &kp C_PP      &kp C_STOP    &kp C_PREV &kp C_NEXT &kp C_VOL_DN &kp C_VOL_UP &kp C_MUTE  &trans      &trans     &trans                        &trans      &trans
-&kp LCTL    &kp LGUI     &kp LALT                              &kp SPC                               &none       &kp RALT    &kp RCTL   &bt BT_PRV                    &trans      &bt BT_NXT
+&kp GRAVE  &kp F1       &kp F2       &kp F3       &kp F4       &kp F5     &kp F6       &kp F7       &kp F8      &kp F9      &kp F10    &kp F11           &kp F12     &trans      &bt BT_CLR  &trans
+&kp TAB    &out OUT_BLE &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &trans     &trans       &trans       &trans      &kp PSCRN   &trans     &kp PAUSE_BREAK   &trans      &trans      &kp HOME
+&kp ESC    &trans       &trans       &trans       &trans       &trans     &trans       &trans       &trans      &trans      &trans     &trans                        &trans      &kp END
+&kp LSHIFT &out OUT_USB &kp C_PP     &kp C_STOP   &kp C_PREV   &kp C_NEXT &kp C_VOL_DN &kp C_VOL_UP &kp C_MUTE  &trans      &trans     &trans                        &trans      &trans
+&kp LCTRL  &kp LGUI     &kp LALT                               &kp SPACE                            &none       &kp RALT    &kp RCTRL  &bt BT_PRV                    &trans      &bt BT_NXT
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
         };

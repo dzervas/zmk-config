@@ -8,11 +8,7 @@ pip3 install --user -U imgtool west
 # Get MCUmgr (for ZMK flashing)
 go get github.com/apache/mynewt-mcumgr-cli/mcumgr
 # Init local west
-west init -l config
-# Update local repos - will take some time
-west update
-# Dunno what this does but ZMK says it's needed
-west zephyr-export
+make init
 # Install project dependencies
 pip3 install --user -r zephyr/scripts/requirements.txt
 pip3 install --user -r mcuboot/scripts/requirements.txt
