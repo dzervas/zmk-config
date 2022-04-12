@@ -21,8 +21,8 @@
 		compatible = "zmk,battery-voltage-divider";
 		label = "BATTERY";
 		io-channels = <&adc 3>;
-		output-ohms = <2100000>;
-		full-ohms = <(2100000 + 806000)>;
+		output-ohms = <2000000>;
+		full-ohms = <(2000000 + 806000)>;
 	};
 
 	kscan: kscan0 {
