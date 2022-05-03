@@ -15,6 +15,7 @@
 	chosen {
 		zmk,kscan = &kscan;
 		zmk,matrix_transform = &default_transform;
+		zephyr,console = &cdc_acm_uart;
 		zephyr,display = &oled;
 	};
 
@@ -124,6 +125,8 @@ RC(4,0) RC(4,1) RC(4,2)                 RC(4,5)                 RC(4,8)  RC(4,9)
 &i2c0 {
 	status = "okay";
 	clock-frequency = <I2C_BITRATE_FAST>;
+	compatible = "nordic,nrf-twim";
+	zephyr,concat-buf-size = <2048>;
 
 	mcp_io: mcp23017@20 {
 		compatible = "microchip,mcp23017";
@@ -173,4 +176,12 @@ RC(4,0) RC(4,1) RC(4,2)                 RC(4,5)                 RC(4,8)  RC(4,9)
 
 &gpio1 {
 	status = "okay";
+};
+
+&usbd {
+	status = "disabled";
+	cdc_acm_uart: cdc_acm_uart {
+		compatible = "zephyr,cdc-acm-uart";
+		label = "CDC_ACM_0";
+	};
 };

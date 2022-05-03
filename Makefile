@@ -2,10 +2,11 @@ BUILD_DIR_ZMK := build-zmk
 BUILD_DIR_MCUBOOT := build-mcuboot
 BINARY_PATH_ZMK := zephyr/zmk.bin
 BINARY_PATH_MCUBOOT := zephyr/zephyr.hex
-FLASH_DEVICE := /dev/ttyACM0
+FLASH_DEVICE := /dev/serial/by-id/usb-ZEPHYR_Lab68_MCUBoot_0194B9F6D412E852-if00
+ZMK_DEVICE := /dev/serial/by-id/usb-ZMK_Project_Lab68_0194B9F6D412E852-if00
 SIGNING_KEY := mcuboot/signing-key-ed25519.pem
 
-.PHONY: ci_setup clean flash flash_clean flash_mcuboot flash_mcuboot_clean init serial
+.PHONY: ci_setup clean clean_mcuboot clean_zmk flash flash_clean flash_mcuboot flash_mcuboot_clean init serial
 
 all: $(BUILD_DIR_MCUBOOT)/$(BINARY_PATH_MCUBOOT) zmk.signed.bin
 
@@ -28,13 +29,20 @@ ci_setup:
 	@echo "[+] Install imgtool"
 	pip3 install imgtool
 
-clean:
-	rm -rf build-zmk build-mcuboot zmk.signed.bin
+clean: clean_mcuboot clean_zmk
+
+clean_mcuboot:
+	rm -rf build-mcuboot
+
+clean_zmk:
+	rm -rf build-zmk zmk.signed.bin
 
 flash: zmk.signed.bin
+	while ! stat $(FLASH_DEVICE) 2>&1 >/dev/null; do echo "Waiting for device $(FLASH_DEVICE)"; sleep 5; done
 	mcumgr --conntype=serial --connstring='dev=$(FLASH_DEVICE),baud=115200' image upload -e $<
+	mcumgr --conntype=serial --connstring='dev=$(FLASH_DEVICE),baud=115200' reset
 
-flash_clean: clean flash
+flash_clean: clean_zmk flash
 
 flash_mcuboot: $(BUILD_DIR_MCUBOOT)/$(BINARY_PATH_MCUBOOT)
 	openocd -f interface/cmsis-dap.cfg -f nrf52-particle.cfg -c "init" -c "reset init" -c "halt" -c "program $(shell pwd)/$< 0x0 verify reset" -c "exit"
@@ -47,7 +55,7 @@ init:
 	west zephyr-export
 
 serial:
-	python -m serial --raw $(FLASH_DEVICE) 115200
+	python -m serial --raw $(ZMK_DEVICE) 115200
 
 update:
 	west update
