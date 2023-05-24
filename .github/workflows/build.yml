@@ -8,6 +8,11 @@ jobs:
     container:
       image: zmkfirmware/zmk-build-arm:stable
     name: Build
+    strategy:
+      matrix:
+        target_shield:
+          - lab68
+          - launchpad
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -39,22 +44,22 @@ jobs:
         run: echo "${{ secrets.MCUBOOT_SIGNING_KEY }}" > mcuboot/signing-key-ed25519.pem
 
       - name: Compile & Sign everything
-        run: make all
+        run: make all TARGET_SHIELD=${{ matrix.target_shield }}
 
-      - name: Lab68 DTS File
+      - name: ${{ matrix.target_shield }} DTS File
         if: ${{ always() }}
-        run: cat -n build-zmk/zephyr/Lab68.dts.pre.tmp || find . -iname particle_xenon.dts.pre.tmp -exec cat -n {} \; -print
-      - name: Lab68 Kconfig file
+        run: cat -n build-zmk/zephyr/${{ matrix.target_shield }}.dts.pre.tmp || find . -iname particle_xenon.dts.pre.tmp -exec cat -n {} \; -print
+      - name: ${{ matrix.target_shield }} Kconfig file
         run: cat build-zmk/zephyr/.config | grep -v "^#" | grep -v "^$"
 
       - name: Rename files
-        run: cp build-mcuboot/zephyr/zephyr.bin mcuboot.bin && cp build-mcuboot/zephyr/zephyr.hex mcuboot.hex && cp build-zmk/zephyr/zmk.bin lab68.bin && cp build-zmk/zephyr/zmk.hex lab68.hex
-      - name: Archive (Lab68)
+        run: cp build-mcuboot/zephyr/zephyr.bin mcuboot.bin && cp build-mcuboot/zephyr/zephyr.hex mcuboot.hex && cp build-zmk/zephyr/zmk.bin ${{ matrix.target_shield }}.bin && cp build-zmk/zephyr/zmk.hex ${{ matrix.target_shield }}.hex
+      - name: Archive (${{ matrix.target_shield }})
         uses: actions/upload-artifact@v2
         with:
           name: firmware
           path: |
-            lab68.*
+            ${{ matrix.target_shield }}.*
             mcuboot.*
           if-no-files-found: error
 
@@ -69,11 +74,11 @@ jobs:
           tag_name: ${{ env.ZMK_COMMIT }}
           release_name: Release ${{ env.ZMK_COMMIT }}
           body: |
-            To flash lab68:
+            To flash ${{ matrix.target_shield }}:
             ```bash
-            wget https://github.com/dzervas/zmk-config/releases/download/${{ env.ZMK_COMMIT }}/lab68.bin -O /tmp/lab68.bin && \
+            wget https://github.com/dzervas/zmk-config/releases/download/${{ env.ZMK_COMMIT }}/${{ matrix.target_shield }}.bin -O /tmp/${{ matrix.target_shield }}.bin && \
             go get -u github.com/apache/mynewt-mcumgr-cli/mcumgr && \
-            mcumgr --conntype=serial --connstring='dev=/dev/ttyACM0,baud=115200' image upload -e /tmp/lab68.bin
+            mcumgr --conntype=serial --connstring='dev=/dev/ttyACM0,baud=115200' image upload -e /tmp/${{ matrix.target_shield }}.bin
             ```
 
             To flash mcuboot (connect Particle Debugger and install openocd):
@@ -92,12 +97,12 @@ jobs:
           asset_name: mcuboot.hex
           asset_content_type: text/plain
 
-      - name: Upload Release Asset (lab68)
+      - name: Upload Release Asset (${{ matrix.target_shield }})
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./lab68.bin
-          asset_name: lab68.bin
+          asset_path: ./${{ matrix.target_shield }}.bin
+          asset_name: ${{ matrix.target_shield }}.bin
           asset_content_type: application/octet-stream

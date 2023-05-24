@@ -2,22 +2,23 @@ BUILD_DIR_ZMK := build-zmk
 BUILD_DIR_MCUBOOT := build-mcuboot
 BINARY_PATH_ZMK := zephyr/zmk.bin
 BINARY_PATH_MCUBOOT := zephyr/zephyr.hex
+TARGET_SHIELD := lab68
 FLASH_DEVICE := /dev/serial/by-id/usb-ZEPHYR_Lab68_MCUBoot_0194B9F6D412E852-if00
 ZMK_DEVICE := /dev/serial/by-id/usb-ZMK_Project_Lab68_0194B9F6D412E852-if00
 SIGNING_KEY := mcuboot/signing-key-ed25519.pem
 
 .PHONY: ci_setup clean clean_mcuboot clean_zmk flash flash_clean flash_mcuboot flash_mcuboot_clean init serial
 
-all: $(BUILD_DIR_MCUBOOT)/$(BINARY_PATH_MCUBOOT) zmk.signed.bin
+all: $(BUILD_DIR_MCUBOOT)/$(BINARY_PATH_MCUBOOT) zmk.signed.$(TARGET_SHIELD).bin
 
 $(BUILD_DIR_ZMK)/$(BINARY_PATH_ZMK):
-	west build -s zmk/app -b particle_xenon -d build-zmk -- -DSHIELD=lab68 -DZMK_CONFIG="$(shell pwd)/config"
+	west build -s zmk/app -b particle_xenon -d build-zmk -- -DSHIELD=$(TARGET_SHIELD) -DZMK_CONFIG="$(shell pwd)/config"
 
 $(BUILD_DIR_MCUBOOT)/$(BINARY_PATH_MCUBOOT):
-	west build -b particle_xenon -d build-mcuboot mcuboot/boot/zephyr -- '-DDTC_OVERLAY_FILE=../../config/boards/shields/lab68/lab68_mcuboot.overlay' '-DOVERLAY_CONFIG=../../../config/boards/shields/lab68/lab68_mcuboot_defconfig'
+	west build -b particle_xenon -d build-mcuboot mcuboot/boot/zephyr -- "-DDTC_OVERLAY_FILE=../../config/boards/shields/$(TARGET_SHIELD)/$(TARGET_SHIELD)_mcuboot.overlay" '-DOVERLAY_CONFIG=../../../config/boards/shields/$(TARGET_SHIELD)/$(TARGET_SHIELD)_mcuboot_defconfig'
 
-zmk.signed.bin: $(BUILD_DIR_ZMK)/$(BINARY_PATH_ZMK)
-	west sign -t imgtool --no-hex --bin -d build-zmk -B zmk.signed.bin -- --key $(SIGNING_KEY)
+zmk.signed.$(TARGET_SHIELD).bin: $(BUILD_DIR_ZMK)/$(BINARY_PATH_ZMK)
+	west sign -t imgtool --no-hex --bin -d build-zmk -B $< -- --key $(SIGNING_KEY)
 
 ci_setup:
 	@echo "[+] Update package cache"

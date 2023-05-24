@@ -16,6 +16,6 @@ manifest:
     - name: mcuboot
       remote: zephyr
       # Taken from zephyr/west.yml that ZMK uses - should be on par with it
-      revision: 89936c338e46f43cb177a8b928cd80b90f3ace8f
+      revision: 2878eb4e32fabc14bc391c3221cbf285064d9db4
   self:
     path: config
