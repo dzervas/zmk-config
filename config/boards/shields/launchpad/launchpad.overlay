@@ -16,6 +16,7 @@
 		zmk,kscan = &kscan;
 		zmk,battery = &vbatt;
 		//zephyr,console = &cdc_acm_uart;
+		zephyr,code-partition = &slot0_partition;
 	};
 
 	ext-power {

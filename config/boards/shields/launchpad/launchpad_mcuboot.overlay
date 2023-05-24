@@ -6,7 +6,7 @@
 
 	chosen {
 		zephyr,flash = &flash0;
-		zephyr,code-partition = &slot0_partition;
+		zephyr,code-partition = &boot_partition;
 	};
 };
 
@@ -59,12 +59,4 @@
 			reg = <0x000F8000 0x00008000>;
 		};
 	};
-};
-
-&usbd {
-	status = "okay";
-};
-
-&uart0 {
-	status = "okay";
 };

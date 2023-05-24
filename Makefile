@@ -49,7 +49,8 @@ flash: zmk.signed.bin
 flash_clean: clean_zmk flash
 
 flash_mcuboot: $(BUILD_DIR_MCUBOOT)/$(BINARY_PATH_MCUBOOT)
-	openocd -f interface/cmsis-dap.cfg -f nrf52-particle.cfg -c "init" -c "reset init" -c "halt" -c "program $(shell pwd)/$< 0x0 verify reset" -c "exit"
+# openocd -f interface/cmsis-dap.cfg -f nrf52-particle.cfg -c "init" -c "reset init" -c "halt" -c "program $(shell pwd)/$< 0x0 verify reset" -c "exit"
+	pyocd flash --verbose --target nrf52840 --erase chip --base-address 0x0 $<
 
 flash_mcuboot_clean: clean flash_mcuboot
 
