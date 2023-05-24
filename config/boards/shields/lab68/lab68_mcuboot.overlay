@@ -1,6 +1,7 @@
 / {
 	aliases {
 		bootloader-led0 = &status_blue;
+		mcuboot-button0 = &mode_button;
 	};
 
 	chosen {

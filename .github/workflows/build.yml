@@ -53,14 +53,14 @@ jobs:
         run: cat build-zmk/zephyr/.config | grep -v "^#" | grep -v "^$"
 
       - name: Rename files
-        run: cp build-mcuboot/zephyr/zephyr.bin mcuboot.bin && cp build-mcuboot/zephyr/zephyr.hex mcuboot.hex && cp build-zmk/zephyr/zmk.bin ${{ matrix.target_shield }}.bin && cp build-zmk/zephyr/zmk.hex ${{ matrix.target_shield }}.hex
+        run: cp build-mcuboot/zephyr/zephyr.bin mcuboot-${{ matrix.target_shield }}.bin && cp build-mcuboot/zephyr/zephyr.hex mcuboot-${{ matrix.target_shield }}.hex && cp build-zmk/zephyr/zmk.bin ${{ matrix.target_shield }}.bin && cp build-zmk/zephyr/zmk.hex ${{ matrix.target_shield }}.hex
       - name: Archive (${{ matrix.target_shield }})
         uses: actions/upload-artifact@v2
         with:
           name: firmware
           path: |
             ${{ matrix.target_shield }}.*
-            mcuboot.*
+            mcuboot-${{ matrix.target_shield }}.*
           if-no-files-found: error
 
       - name: Get ZMK commit
@@ -77,7 +77,7 @@ jobs:
             To flash ${{ matrix.target_shield }}:
             ```bash
             wget https://github.com/dzervas/zmk-config/releases/download/${{ env.ZMK_COMMIT }}/${{ matrix.target_shield }}.bin -O /tmp/${{ matrix.target_shield }}.bin && \
-            go get -u github.com/apache/mynewt-mcumgr-cli/mcumgr && \
+            go install github.com/apache/mynewt-mcumgr-cli/mcumgr@latest && \
             mcumgr --conntype=serial --connstring='dev=/dev/ttyACM0,baud=115200' image upload -e /tmp/${{ matrix.target_shield }}.bin
             ```
 
@@ -85,7 +85,7 @@ jobs:
             ```bash
             wget https://github.com/dzervas/zmk-config/releases/download/${{ env.ZMK_COMMIT }}/mcuboot.hex -O /tmp/mcuboot.hex && \
             wget https://github.com/dzervas/zmk-config/raw/main/nrf52-particle.cfg -O /tmp/nrf52-particle.cfg && \
-            openocd -f interface/cmsis-dap.cfg -f /tmp/nrf52-particle.cfg -c "init" -c "reset init" -c "halt" -c "program /tmp/mcuboot.hex 0x0 verify reset" -c "exit"
+            openocd -f interface/cmsis-dap.cfg -f /tmp/nrf52-particle.cfg -c "init" -c "reset init" -c "halt" -c "program /tmp/mcuboot-${{ matrix.target_shield }}.hex 0x0 verify reset" -c "exit"
             ```
       - name: Upload Release Asset (mcuboot)
         uses: actions/upload-release-asset@v1

@@ -15,6 +15,7 @@
 	chosen {
 		zmk,kscan = &kscan;
 		zmk,matrix_transform = &default_transform;
+		zmk,battery = &vbatt;
 		zephyr,console = &cdc_acm_uart;
 		zephyr,display = &oled;
 	};
@@ -32,7 +33,7 @@
 		vctl2-gpios = <&gpio0 25 GPIO_ACTIVE_LOW>;
 	};
 
-	vbatt {
+	vbatt: vbatt {
 		compatible = "zmk,battery-voltage-divider";
 		label = "BATTERY";
 		io-channels = <&adc 3>;
@@ -129,10 +130,10 @@ RC(4,0) RC(4,1) RC(4,2)                 RC(4,5)                 RC(4,8)  RC(4,9)
 	zephyr,concat-buf-size = <2048>;
 
 	mcp_io: mcp23017@20 {
-		compatible = "microchip,mcp23017";
+		compatible = "microchip,mcp230xx";
 		status = "okay";
 		reg = <0x20>;
-		label = "MCP_IO";
+		// label = "MCP_IO";
 
 		gpio-controller;
 		#gpio-cells = <2>;

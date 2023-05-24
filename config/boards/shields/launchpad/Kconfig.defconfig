@@ -9,15 +9,12 @@ config BOARD
 config ZMK_KEYBOARD_NAME
 	default "LaunchPad"
 
-if USB
+if USB_DEVICE_STACK
 
 config USB_NRFX
 	default y
 
-config USB_DEVICE_STACK
-	default y
-
-endif # USB
+endif # USB_DEVICE_STACK
 
 
 config ZMK_BLE
@@ -66,9 +63,9 @@ config FLASH_MAP
 
 # MCUBoot
 config BOOTLOADER_MCUBOOT
-	default y
+	default n
 
 config ROM_START_OFFSET
 	default 0x200
 
-endif
+endif # SHIELD_LAUNCHPAD

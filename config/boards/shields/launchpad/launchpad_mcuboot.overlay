@@ -1,6 +1,7 @@
 / {
 	aliases {
 		bootloader-led0 = &status_blue;
+		mcuboot-button0 = &mode_button;
 	};
 
 	chosen {
@@ -27,20 +28,20 @@
 		 * can be built with CDC ACM support and w/o optimizations.
 		 */
 		boot_partition: partition@0 {
-			label = "mcuboot";
+			// label = "mcuboot";
 			reg = <0x00000000 0x0014000>;
 		};
 
 		slot0_partition: partition@14000 {
-			label = "image-0";
+			// label = "image-0";
 			reg = <0x00014000 0x000063000>;
 		};
 		slot1_partition: partition@77000 {
-			label = "image-1";
+			// label = "image-1";
 			reg = <0x0077000 0x000063000>;
 		};
 		scratch_partition: partition@DA000 {
-			label = "image-scratch";
+			// label = "image-scratch";
 			reg = <0x000DA000 0x0001E000>;
 		};
 
@@ -54,7 +55,7 @@
 		 * if enabled.
 		 */
 		storage_partition: partition@F8000 {
-			label = "storage";
+			// label = "storage";
 			reg = <0x000F8000 0x00008000>;
 		};
 	};

@@ -1,0 +1,11 @@
+file_format: "1"
+id: launchpad
+name: LaunchPad
+type: shield
+arch: arm
+features:
+  - keys
+outputs:
+  - usb
+  - ble
+url: https://github.com/dzervas/zmk-config
