@@ -63,7 +63,7 @@ config FLASH_MAP
 
 # MCUBoot
 config BOOTLOADER_MCUBOOT
-	default n
+	default y
 
 config ROM_START_OFFSET
 	default 0x200

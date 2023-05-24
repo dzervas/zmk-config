@@ -9,7 +9,7 @@ SIGNING_KEY := mcuboot/signing-key-ed25519.pem
 
 .PHONY: ci_setup clean clean_mcuboot clean_zmk flash flash_clean flash_mcuboot flash_mcuboot_clean init serial
 
-all: $(BUILD_DIR_MCUBOOT)/$(BINARY_PATH_MCUBOOT) zmk.signed.$(TARGET_SHIELD).bin
+all: $(BUILD_DIR_MCUBOOT)/$(BINARY_PATH_MCUBOOT) zmk.signed.$(TARGET_SHIELD).bin zmk.signed.$(TARGET_SHIELD).hex
 
 $(BUILD_DIR_ZMK)/$(BINARY_PATH_ZMK):
 	west build -s zmk/app -b particle_xenon -d build-zmk -- -DSHIELD=$(TARGET_SHIELD) -DZMK_CONFIG="$(shell pwd)/config"
@@ -18,7 +18,10 @@ $(BUILD_DIR_MCUBOOT)/$(BINARY_PATH_MCUBOOT):
 	west build -b particle_xenon -d build-mcuboot mcuboot/boot/zephyr -- "-DDTC_OVERLAY_FILE=../../config/boards/shields/$(TARGET_SHIELD)/$(TARGET_SHIELD)_mcuboot.overlay" '-DOVERLAY_CONFIG=../../../config/boards/shields/$(TARGET_SHIELD)/$(TARGET_SHIELD)_mcuboot_defconfig'
 
 zmk.signed.$(TARGET_SHIELD).bin: $(BUILD_DIR_ZMK)/$(BINARY_PATH_ZMK)
-	west sign -t imgtool --no-hex --bin -d build-zmk -B $< -- --key $(SIGNING_KEY)
+	west sign -t imgtool --no-hex --bin -d build-zmk -B $@ -- --key $(SIGNING_KEY)
+
+zmk.signed.$(TARGET_SHIELD).hex: $(BUILD_DIR_ZMK)/$(BINARY_PATH_ZMK)
+	west sign -t imgtool --hex --no-bin -d build-zmk -H $@ -- --key $(SIGNING_KEY)
 
 ci_setup:
 	@echo "[+] Update package cache"
