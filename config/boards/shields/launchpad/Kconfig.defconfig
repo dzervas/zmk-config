@@ -46,7 +46,13 @@ config BT_SETTINGS_CCC_STORE_ON_WRITE
 	default y
 
 # Hardware stuff
-config HW_STACK_PROTECTION
+#config HW_STACK_PROTECTION
+#	default y
+
+config GPIO
+	default y
+
+config ARM_MPU
 	default y
 
 config MPU_ALLOW_FLASH_WRITE
@@ -61,11 +67,16 @@ config FLASH
 config FLASH_MAP
 	default y
 
+config FLASH_PAGE_LAYOUT
+	default y
+
 # MCUBoot
 config BOOTLOADER_MCUBOOT
 	default y
 
-config ROM_START_OFFSET
-	default 0x200
+#config ROM_START_OFFSET
+#	default 0x200
+#config BUILD_OUTPUT_UF2
+#	default y
 
 endif # SHIELD_LAUNCHPAD

@@ -1,6 +1,6 @@
 / {
 	aliases {
-		bootloader-led0 = &status_blue;
+		mcuboot-led0 = &status_red;
 		mcuboot-button0 = &mode_button;
 	};
 
@@ -16,6 +16,7 @@
 /delete-node/ &slot1_partition;
 /delete-node/ &scratch_partition;
 /delete-node/ &storage_partition;
+
 
 &flash0 {
 	partitions {
@@ -40,10 +41,12 @@
 			label = "image-1";
 			reg = <0x0077000 0x000063000>;
 		};
+		/*
 		scratch_partition: partition@DA000 {
 			label = "image-scratch";
 			reg = <0x000DA000 0x0001E000>;
 		};
+		*/
 
 		/*
 		 * The flash starting at 0x000f8000 and ending at
@@ -58,5 +61,20 @@
 			label = "storage";
 			reg = <0x000F8000 0x00008000>;
 		};
+	};
+};
+
+/*
+&uart0 {
+	status = "okay";
+};
+
+*/
+
+&usbd {
+	status = "okay";
+	cdc_acm_uart: cdc_acm_uart {
+		compatible = "zephyr,cdc-acm-uart";
+		label = "CDC_ACM_0";
 	};
 };
