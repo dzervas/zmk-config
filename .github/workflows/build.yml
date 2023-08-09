@@ -56,6 +56,9 @@ jobs:
         id: get_zmk_commit
         run: echo "zmk_commit=$(git --git-dir zmk/.git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
 
+      - name: Rename files
+        run: cp build-mcuboot/zephyr/zephyr.bin mcuboot-${{ matrix.target_shield }}.bin && cp build-mcuboot/zephyr/zephyr.hex mcuboot-${{ matrix.target_shield }}.hex && cp build-zmk/zephyr/zmk.bin zmk-${{ matrix.target_shield }}.bin && cp build-zmk/zephyr/zmk.hex zmk-${{ matrix.target_shield }}.hex
+
       - name: Archive (${{ matrix.target_shield }})
         uses: actions/upload-artifact@v3
         with:
