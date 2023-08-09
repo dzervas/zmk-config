@@ -65,10 +65,10 @@ jobs:
 
       - name: Get ZMK commit
         id: get_zmk_commit
-        run: echo "::set-output name=zmk_commit::$(git --git-dir zmk/.git rev-parse --short HEAD)"
+        run: echo "zmk_commit=$(git --git-dir zmk/.git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Archive (${{ matrix.target_shield }})
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: firmware-${{ matrix.target_shield }}
           path: |
@@ -82,6 +82,8 @@ jobs:
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v3
+        with:
+          path: artifacts
 
       - name: Create Release
         id: create_release
@@ -90,8 +92,7 @@ jobs:
           name: Release ZMK-${{ needs.build.outputs.zmk_commit }}
           tag_name: zmk-${{ needs.build.outputs.zmk_commit }}
           files: |
-            zmk-*.*
-            mcuboot-*.*
+            artifacts/*/*
           body: |
             To flash ZMK:
             ```bash
