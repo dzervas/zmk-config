@@ -52,20 +52,20 @@ jobs:
       - name: ${{ matrix.target_shield }} Kconfig file
         run: cat build-zmk/zephyr/.config | grep -v "^#" | grep -v "^$"
 
+      - name: Get ZMK commit
+        id: get_zmk_commit
+        run: echo "zmk_commit=$(git --git-dir zmk/.git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
       - name: Rename files
         run: cp build-mcuboot/zephyr/zephyr.bin mcuboot-${{ matrix.target_shield }}.bin && cp build-mcuboot/zephyr/zephyr.hex mcuboot-${{ matrix.target_shield }}.hex && cp build-zmk/zephyr/zmk.bin zmk-${{ matrix.target_shield }}.bin && cp build-zmk/zephyr/zmk.hex zmk-${{ matrix.target_shield }}.hex
       - name: Archive (${{ matrix.target_shield }})
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: firmware
           path: |
             ${{ matrix.target_shield }}.*
             mcuboot-${{ matrix.target_shield }}.*
           if-no-files-found: error
-
-      - name: Get ZMK commit
-        id: get_zmk_commit
-        run: echo "zmk_commit=$(git --git-dir zmk/.git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Archive (${{ matrix.target_shield }})
         uses: actions/upload-artifact@v3
@@ -84,6 +84,8 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           path: artifacts
+
+      - run: ls -R
 
       - name: Create Release
         id: create_release
