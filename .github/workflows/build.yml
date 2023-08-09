@@ -1,4 +1,4 @@
-on: [push, pull_request, workflow_dispatch]
+on: [push, workflow_dispatch]
 
 name: Build
 
@@ -13,13 +13,13 @@ jobs:
         target_shield:
           - lab68
           - launchpad
+    outputs:
+      zmk_commit: ${{ steps.get_zmk_commit.outputs.zmk_commit }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache west modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-zephyr-modules
+        uses: actions/cache@v3
         with:
           path: |
             modules/
@@ -52,57 +52,52 @@ jobs:
       - name: ${{ matrix.target_shield }} Kconfig file
         run: cat build-zmk/zephyr/.config | grep -v "^#" | grep -v "^$"
 
+      - name: Get ZMK commit
+        id: get_zmk_commit
+        run: echo "zmk_commit=$(git --git-dir zmk/.git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
       - name: Rename files
-        run: cp build-mcuboot/zephyr/zephyr.bin mcuboot-${{ matrix.target_shield }}.bin && cp build-mcuboot/zephyr/zephyr.hex mcuboot-${{ matrix.target_shield }}.hex && cp build-zmk/zephyr/zmk.bin ${{ matrix.target_shield }}.bin && cp build-zmk/zephyr/zmk.hex ${{ matrix.target_shield }}.hex
+        run: cp build-mcuboot/zephyr/zephyr.bin mcuboot-${{ matrix.target_shield }}.bin && cp build-mcuboot/zephyr/zephyr.hex mcuboot-${{ matrix.target_shield }}.hex && cp build-zmk/zephyr/zmk.bin zmk-${{ matrix.target_shield }}.bin && cp build-zmk/zephyr/zmk.hex zmk-${{ matrix.target_shield }}.hex
+
       - name: Archive (${{ matrix.target_shield }})
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: firmware
+          name: firmware-${{ matrix.target_shield }}
           path: |
-            ${{ matrix.target_shield }}.*
+            zmk-${{ matrix.target_shield }}.*
             mcuboot-${{ matrix.target_shield }}.*
           if-no-files-found: error
 
-      - name: Get ZMK commit
-        run: echo "ZMK_COMMIT=$(git --git-dir zmk/.git rev-parse --short HEAD)" >> $GITHUB_ENV 
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ env.ZMK_COMMIT }}
-          release_name: Release ${{ env.ZMK_COMMIT }}
+          name: Release ZMK-${{ needs.build.outputs.zmk_commit }}
+          tag_name: zmk-${{ needs.build.outputs.zmk_commit }}
+          files: |
+            artifacts/firmware-*/*
           body: |
-            To flash ${{ matrix.target_shield }}:
+            To flash ZMK:
             ```bash
-            wget https://github.com/dzervas/zmk-config/releases/download/${{ env.ZMK_COMMIT }}/${{ matrix.target_shield }}.bin -O /tmp/${{ matrix.target_shield }}.bin && \
-            go install github.com/apache/mynewt-mcumgr-cli/mcumgr@latest && \
-            mcumgr --conntype=serial --connstring='dev=/dev/ttyACM0,baud=115200' image upload -e /tmp/${{ matrix.target_shield }}.bin
+            go install github.com/apache/mynewt-mcumgr-cli/mcumgr@latest
+            export SHIELD=<shield name>
+            wget https://github.com/dzervas/zmk-config/releases/download/zmk-${{ needs.build.outputs.zmk_commit }}/zmk-$SHIELD.bin -O /tmp/zmk-$SHIELD.bin
+            mcumgr --conntype=serial --connstring='dev=/dev/ttyACM0,baud=115200' image upload -e /tmp/zmk-$SHIELD.bin
             ```
 
             To flash mcuboot (connect Particle Debugger and install openocd):
             ```bash
-            wget https://github.com/dzervas/zmk-config/releases/download/${{ env.ZMK_COMMIT }}/mcuboot.hex -O /tmp/mcuboot.hex && \
-            wget https://github.com/dzervas/zmk-config/raw/main/nrf52-particle.cfg -O /tmp/nrf52-particle.cfg && \
-            openocd -f interface/cmsis-dap.cfg -f /tmp/nrf52-particle.cfg -c "init" -c "reset init" -c "halt" -c "program /tmp/mcuboot-${{ matrix.target_shield }}.hex 0x0 verify reset" -c "exit"
+            wget https://github.com/dzervas/zmk-config/raw/main/nrf52-particle.cfg -O /tmp/nrf52-particle.cfg
+            export SHIELD=<shield name>
+            wget https://github.com/dzervas/zmk-config/releases/download/zmk-${{ needs.build.outputs.zmk_commit }}/mcuboot-$SHIELD.hex -O /tmp/mcuboot-$SHIELD.hex
+            openocd -f interface/cmsis-dap.cfg -f /tmp/nrf52-particle.cfg -c "init" -c "reset init" -c "halt" -c "program /tmp/mcuboot-$SHIELD.hex 0x0 verify reset" -c "exit"
             ```
-      - name: Upload Release Asset (mcuboot)
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./mcuboot.hex
-          asset_name: mcuboot.hex
-          asset_content_type: text/plain
-
-      - name: Upload Release Asset (${{ matrix.target_shield }})
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ matrix.target_shield }}.bin
-          asset_name: ${{ matrix.target_shield }}.bin
-          asset_content_type: application/octet-stream
