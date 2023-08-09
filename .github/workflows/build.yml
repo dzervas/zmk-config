@@ -13,6 +13,8 @@ jobs:
         target_shield:
           - lab68
           - launchpad
+    outputs:
+      zmk_commit: ${{ steps.get_zmk_commit.outputs.zmk_commit }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -64,6 +66,7 @@ jobs:
           if-no-files-found: error
 
       - name: Get ZMK commit
+        id: get_zmk_commit
         run: echo "::set-output name=zmk_commit::$(git --git-dir zmk/.git rev-parse --short HEAD)"
 
       - name: Archive (${{ matrix.target_shield }})
