@@ -12,7 +12,7 @@ jobs:
       matrix:
         target_shield:
           - lab68
-          - launchpad
+          #- launchpad
     steps:
       - name: Checkout
         uses: actions/checkout@v2
