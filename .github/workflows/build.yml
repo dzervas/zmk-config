@@ -56,17 +56,6 @@ jobs:
         id: get_zmk_commit
         run: echo "zmk_commit=$(git --git-dir zmk/.git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Rename files
-        run: cp build-mcuboot/zephyr/zephyr.bin mcuboot-${{ matrix.target_shield }}.bin && cp build-mcuboot/zephyr/zephyr.hex mcuboot-${{ matrix.target_shield }}.hex && cp build-zmk/zephyr/zmk.bin zmk-${{ matrix.target_shield }}.bin && cp build-zmk/zephyr/zmk.hex zmk-${{ matrix.target_shield }}.hex
-      - name: Archive (${{ matrix.target_shield }})
-        uses: actions/upload-artifact@v3
-        with:
-          name: firmware
-          path: |
-            ${{ matrix.target_shield }}.*
-            mcuboot-${{ matrix.target_shield }}.*
-          if-no-files-found: error
-
       - name: Archive (${{ matrix.target_shield }})
         uses: actions/upload-artifact@v3
         with:
@@ -85,8 +74,6 @@ jobs:
         with:
           path: artifacts
 
-      - run: ls -R
-
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
@@ -94,7 +81,7 @@ jobs:
           name: Release ZMK-${{ needs.build.outputs.zmk_commit }}
           tag_name: zmk-${{ needs.build.outputs.zmk_commit }}
           files: |
-            artifacts/**
+            artifacts/firmware-*/*
           body: |
             To flash ZMK:
             ```bash
