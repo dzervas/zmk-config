@@ -87,8 +87,8 @@ jobs:
           name: Release ZMK-${{ needs.build.outputs.zmk_commit }}
           tag_name: zmk-${{ needs.build.outputs.zmk_commit }}
           files: |
-            *.hex
-            *.bin
+            zmk-*.*
+            mcuboot-*.*
           body: |
             To flash ZMK:
             ```bash
