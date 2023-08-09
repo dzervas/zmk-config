@@ -74,31 +74,35 @@ jobs:
           tag_name: ${{ env.ZMK_COMMIT }}
           release_name: Release ${{ env.ZMK_COMMIT }}
           body: |
-            To flash ${{ matrix.target_shield }}:
+            To flash ZMK:
             ```bash
-            wget https://github.com/dzervas/zmk-config/releases/download/${{ env.ZMK_COMMIT }}/${{ matrix.target_shield }}.bin -O /tmp/${{ matrix.target_shield }}.bin && \
-            go install github.com/apache/mynewt-mcumgr-cli/mcumgr@latest && \
-            mcumgr --conntype=serial --connstring='dev=/dev/ttyACM0,baud=115200' image upload -e /tmp/${{ matrix.target_shield }}.bin
+            go install github.com/apache/mynewt-mcumgr-cli/mcumgr@latest
+            export SHIELD=<shield name>
+            wget https://github.com/dzervas/zmk-config/releases/download/${{ env.ZMK_COMMIT }}/$SHIELD.bin -O /tmp/$SHIELD.bin
+            mcumgr --conntype=serial --connstring='dev=/dev/ttyACM0,baud=115200' image upload -e /tmp/$SHIELD.bin
             ```
 
             To flash mcuboot (connect Particle Debugger and install openocd):
             ```bash
-            wget https://github.com/dzervas/zmk-config/releases/download/${{ env.ZMK_COMMIT }}/mcuboot.hex -O /tmp/mcuboot.hex && \
-            wget https://github.com/dzervas/zmk-config/raw/main/nrf52-particle.cfg -O /tmp/nrf52-particle.cfg && \
-            openocd -f interface/cmsis-dap.cfg -f /tmp/nrf52-particle.cfg -c "init" -c "reset init" -c "halt" -c "program /tmp/mcuboot-${{ matrix.target_shield }}.hex 0x0 verify reset" -c "exit"
+            wget https://github.com/dzervas/zmk-config/raw/main/nrf52-particle.cfg -O /tmp/nrf52-particle.cfg
+            export SHIELD=<shield name>
+            wget https://github.com/dzervas/zmk-config/releases/download/${{ env.ZMK_COMMIT }}/mcuboot-$SHIELD.hex -O /tmp/mcuboot-$SHIELD.hex
+            openocd -f interface/cmsis-dap.cfg -f /tmp/nrf52-particle.cfg -c "init" -c "reset init" -c "halt" -c "program /tmp/mcuboot-$SHIELD.hex 0x0 verify reset" -c "exit"
             ```
       - name: Upload Release Asset (mcuboot)
         uses: actions/upload-release-asset@v1
+        if: success() || failure()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
           asset_path: ./mcuboot.hex
-          asset_name: mcuboot.hex
+          asset_name: mcuboot-${{ matrix.target_shield }}.hex
           asset_content_type: text/plain
 
       - name: Upload Release Asset (${{ matrix.target_shield }})
         uses: actions/upload-release-asset@v1
+        if: success() || failure()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
