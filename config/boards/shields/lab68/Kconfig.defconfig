@@ -2,115 +2,119 @@
 # SPDX-License-Identifier: MIT
 
 if SHIELD_LAB68
+	# General
+	config BOARD
+		default "lab68"
 
-config BOARD
-	default "particle_xenon"
+	config ZMK_KEYBOARD_NAME
+		default "Lab68"
 
-config ZMK_KEYBOARD_NAME
-	default "Lab68"
+	config ZMK_KSCAN_MATRIX_POLLING
+		default y
 
-config I2C
-	default y
+	# config ZMK_KSCAN_COMPOSITE_DRIVER
+	# 	default y
 
-config GPIO_MCP230XX
-	default y
+	config ZMK_BATTERY_VOLTAGE_DIVIDER
+		default y
 
-config EC11
-	default y
+	# MCP23017 I/O Expander
+	config I2C
+		default y
 
-if USB_DEVICE_STACK
+	config GPIO_MCP230XX
+		default y
 
-config USB_NRFX
-	default y
+	# Rotary encoder
+	config EC11
+		default y
 
-endif # USB
+	# USB stuff
+	config ZMK_USB
+		default y
 
-if ZMK_DISPLAY
+	if USB_DEVICE_STACK
+		config USB_NRFX
+			default y
+	endif # USB
 
-config I2C
-	default y
+	# Display stuff
+	if ZMK_DISPLAY
+		config I2C
+			default y
 
-config SSD1306
-	default y
+		config SSD1306
+			default y
 
-config SSD1306_REVERSE_MODE
-	default y
+		config SSD1306_REVERSE_MODE
+			default y
+	endif # display
 
-endif # ZMK_DISPLAY
+	if LVGL
+		#config LVGL_HOR_RES_MAX
+		#	default 128
 
-if LVGL
-
-#config LVGL_HOR_RES_MAX
-#	default 128
-
-#config LVGL_VER_RES_MAX
-#	default 32
+		#config LVGL_VER_RES_MAX
+		#	default 32
 
 
-config LV_Z_VDB_SIZE
-	default 64
+		config LV_Z_VDB_SIZE
+			default 64
 
-config LV_Z_DPI
-	default 148
+		config LV_Z_DPI
+			default 148
 
-config LV_Z_BITS_PER_PIXEL
-	default 1
+		config LV_Z_BITS_PER_PIXEL
+			default 1
 
-choice LV_COLOR_DEPTH
-	default LV_COLOR_DEPTH_1
-endchoice
+		choice LV_COLOR_DEPTH
+			default LV_COLOR_DEPTH_1
+		endchoice
+	endif # LVGL
 
-endif # LVGL
+	# Bluetooth settings
+	config ZMK_BLE
+		default y
 
-config ZMK_BLE
-	default y
+	config BT_CTLR
+		default BT
 
-config ZMK_USB
-	default y
+	config BT_BONDING_REQUIRED
+		default y
 
-config ZMK_KSCAN_MATRIX_POLLING
-	default y
+	config BT_SMP_SC_ONLY
+		default y
 
-config ZMK_KSCAN_COMPOSITE_DRIVER
-	default y
+	config BT_SETTINGS_CCC_STORE_ON_WRITE
+		default y
 
-config ZMK_BATTERY_VOLTAGE_DIVIDER
-	default y
+	# Low-level hardware
+	config HW_STACK_PROTECTION
+		default y
 
-# Bluetooth settings
-config BT_CTLR
-	default BT
+	config MPU_ALLOW_FLASH_WRITE
+		default y
 
-config BT_BONDING_REQUIRED
-	default y
+	config NVS
+		default y
 
-config BT_SMP_SC_ONLY
-	default y
+	config FLASH
+		default y
 
-config BT_SETTINGS_CCC_STORE_ON_WRITE
-	default y
+	config FLASH_MAP
+		default y
 
-# Hardware stuff
-config HW_STACK_PROTECTION
-	default y
+	config USB_CDC_ACM_RINGBUF_SIZE
+		default 4096
 
-config MPU_ALLOW_FLASH_WRITE
-	default y
+	config PINCTRL
+		default y
 
-config NVS
-	default y
+	# MCUBoot
+	config BOOTLOADER_MCUBOOT
+		default y
 
-config FLASH
-	default y
+	config ROM_START_OFFSET
+		default 0x200
 
-config FLASH_MAP
-	default y
-
-# MCUBoot
-config BOOTLOADER_MCUBOOT
-	default y
-
-config ROM_START_OFFSET
-	default 0x200
-
-endif # SHIELD_LAB68
+endif

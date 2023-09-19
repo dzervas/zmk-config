@@ -1,0 +1,13 @@
+file_format: "1"
+id: lab68
+name: Lab68
+type: shield
+arch: arm
+features:
+  - keys
+  - display
+  - encoder
+outputs:
+  - usb
+  - ble
+url: https://github.com/dzervas/zmk-config

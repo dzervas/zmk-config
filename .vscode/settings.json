@@ -1,0 +1,7 @@
+{
+	"kconfig.zephyr.board": {
+		"board": "particle_xenon",
+		"arch": "arm",
+		"dir": "/home/dzervas/Lab/zmk-config/zephyr/boards/arm/particle_xenon"
+	}
+}

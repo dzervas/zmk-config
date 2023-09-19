@@ -1,3 +1,5 @@
+/dts-v1/;
+
 / {
 	aliases {
 		mcuboot-led0 = &status_red;

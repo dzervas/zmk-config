@@ -3,3 +3,4 @@
 
 config SHIELD_LAB68
 	def_bool $(shields_list_contains,lab68)
+	# depends on BOARD_PARTICLE_XENON

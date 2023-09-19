@@ -14,10 +14,12 @@
 #define FUNC 1
 
 / {
+    /*
     sensors {
         compatible = "zmk,keymap-sensors";
         sensors = <&encoder0>;
     };
+    */
 
     keymap {
         compatible = "zmk,keymap";
@@ -30,7 +32,7 @@
 &kp LSHIFT &kp Z    &kp X    &kp C  &kp V  &kp B     &kp N  &kp M  &kp COMMA &kp DOT  &kp FSLH  &kp RSHIFT &kp UP             &kp INSERT
 &kp LCTRL  &kp LGUI &kp LALT               &kp SPACE               &mo FUNC  &kp RALT &kp RCTRL &kp LEFT   &kp DOWN           &kp RIGHT
             >;
-            sensor-bindings = <&inc_dec_kp RIGHT LEFT>;
+            //sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
 
         func_layer {
@@ -41,7 +43,7 @@
 &kp LSHIFT        &out OUT_USB &kp C_PP     &kp C_STOP   &kp C_PREV   &kp C_NEXT &kp C_VOL_DN &kp C_VOL_UP &kp C_MUTE &trans    &trans    &trans                  &trans &trans
 &kp LCTRL         &kp LGUI     &kp LALT                               &kp SPACE                            &none      &kp RALT  &kp RCTRL &bt BT_PRV              &trans &bt BT_NXT
             >;
-            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+            //sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
     };
 };

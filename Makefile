@@ -42,7 +42,7 @@ clean_zmk:
 	rm -rf build-zmk zmk.signed.*.bin
 
 flash: zmk.signed.$(TARGET_SHIELD).bin
-	while ! stat $(FLASH_DEVICE) 2>&1 >/dev/null; do echo "Waiting for device $(FLASH_DEVICE)"; sleep 5; done
+	@while ! stat $(FLASH_DEVICE) 2>&1 >/dev/null; do echo "Waiting for device $(FLASH_DEVICE)"; sleep 5; done
 	mcumgr --conntype=serial --connstring='dev=$(FLASH_DEVICE),baud=115200' image upload -e $<
 	mcumgr --conntype=serial --connstring='dev=$(FLASH_DEVICE),baud=115200' reset
 
@@ -60,6 +60,7 @@ init:
 	west zephyr-export
 
 serial:
+	@while ! stat $(ZMK_DEVICE) 2>&1 >/dev/null; do echo "Waiting for device $(ZMK_DEVICE)"; sleep 1; done
 	python -m serial --raw $(ZMK_DEVICE) 115200
 
 update:

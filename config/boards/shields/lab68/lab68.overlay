@@ -8,15 +8,32 @@
 #include <dt-bindings/zmk/matrix_transform.h>
 #include "lab68_mcuboot.overlay"
 
+// &pinctrl {
+// 	i2c0_default: i2c0_default {
+// 		group1 {
+// 			psels = <NRF_PSEL(TWIM_SDA, 0, 26)>, <NRF_PSEL(TWIM_SCL, 0, 27)>;
+// 			bias-pull-up;
+// 		};
+// 	};
+
+// 	i2c0_sleep: i2c0_sleep {
+// 		group1 {
+// 			psels = <NRF_PSEL(TWIM_SDA, 0, 26)>, <NRF_PSEL(TWIM_SCL, 0, 27)>;
+// 			low-power-enable;
+// 			bias-pull-up;
+// 		};
+// 	};
+// };
+
 / {
-	model = "lab68";
+	model = "Lab68";
 	compatible = "dzervas,lab68";
 
 	chosen {
 		zmk,kscan = &kscan;
 		zmk,matrix_transform = &default_transform;
 		zmk,battery = &vbatt;
-		// zephyr,console = &cdc_acm_uart;
+		zephyr,console = &cdc_acm_uart;
 		zephyr,display = &oled;
 		zephyr,code-partition = &slot0_partition;
 	};
@@ -61,38 +78,35 @@
 		diode-direction = "col2row";
 
 		col-gpios
-			= <&mcp_io 8 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
-			, <&mcp_io 9 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			= <&mcp_io 8  (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 9  (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
 			, <&mcp_io 10 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
 			, <&mcp_io 11 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
 			, <&mcp_io 12 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
 			, <&mcp_io 13 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
 			, <&mcp_io 14 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
 			, <&mcp_io 15 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
-			, <&mcp_io 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
-			, <&mcp_io 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
-			, <&mcp_io 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
-			, <&mcp_io 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
-			, <&mcp_io 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
-			, <&mcp_io 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
-			, <&mcp_io 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 4  (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 5  (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 6  (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 7  (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 3  (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 2  (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
+			, <&mcp_io 1  (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>
 			;
 		row-gpios
 			= <&gpio1 12 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
 			, <&gpio1 11 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
 			, <&gpio1 10 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-			, <&gpio1 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-			, <&gpio1 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+			, <&gpio1 2  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+			, <&gpio1 1  (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
 			;
 	};
 
 	encoder_kscan: kscan2 {
 		compatible = "zmk,kscan-gpio-direct";
-		debounce-period = <50>;
-		label = "ENCODER_KSCAN";
-		input-gpios
-			= <&gpio0 29 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>
-			;
+		// debounce-period = <50>;
+		input-gpios = <&gpio0 29 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
 	};
 
 	default_transform: keymap_transform_0 {
@@ -117,21 +131,26 @@ RC(4,0) RC(4,1) RC(4,2)                 RC(4,5)                 RC(4,8)  RC(4,9)
 		label = "MAIN_ENCODER";
 		a-gpios = <&gpio0 30 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
 		b-gpios = <&gpio0 31 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-		resolution = <2>;
+		// resolution = <2>;
 	};
+};
+
+&encoder0 {
+	status = "okay";
 };
 
 &i2c0 {
 	status = "okay";
+	compatible = "nordic,nrf-twi";
 	clock-frequency = <I2C_BITRATE_FAST>;
-	compatible = "nordic,nrf-twim";
-	zephyr,concat-buf-size = <2048>;
+	pinctrl-0 = <&i2c0_default>;
+	pinctrl-1 = <&i2c0_sleep>;
+	pinctrl-names = "default", "sleep";
 
 	mcp_io: mcp23017@20 {
 		compatible = "microchip,mcp230xx";
 		status = "okay";
 		reg = <0x20>;
-		// label = "MCP_IO";
 
 		gpio-controller;
 		#gpio-cells = <2>;
@@ -142,7 +161,6 @@ RC(4,0) RC(4,1) RC(4,2)                 RC(4,5)                 RC(4,8)  RC(4,9)
 		compatible = "solomon,ssd1306fb";
 		status = "okay";
 		reg = <0x3c>;
-		label = "DISPLAY";
 
 		width = <128>;
 		height = <32>;
@@ -161,10 +179,6 @@ RC(4,0) RC(4,1) RC(4,2)                 RC(4,5)                 RC(4,8)  RC(4,9)
 	status = "okay";
 };
 
-&encoder0 {
-	status = "okay";
-};
-
 &gpiote {
 	status = "okay";
 };
@@ -176,8 +190,6 @@ RC(4,0) RC(4,1) RC(4,2)                 RC(4,5)                 RC(4,8)  RC(4,9)
 &gpio1 {
 	status = "okay";
 };
-
-/delete-node/ &cdc_acm_uart;
 
 &usbd {
 	status = "okay";

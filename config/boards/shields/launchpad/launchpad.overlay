@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
+/dts-v1/;
 #include <nordic/nrf52840_qiaa.dtsi>
 #include <dt-bindings/zmk/matrix_transform.h>
 #include "launchpad_mcuboot.overlay"
@@ -13,9 +14,9 @@
 	compatible = "dzervas,launchpad";
 
 	chosen {
-		zmk,kscan = &kscan;
+		zmk,kscan = &matric_kscan;
 		zmk,battery = &vbatt;
-		//zephyr,console = &cdc_acm_uart;
+		zephyr,console = &cdc_acm_uart;
 		zephyr,code-partition = &slot0_partition;
 	};
 
@@ -38,17 +39,6 @@
 		io-channels = <&adc 3>;
 		output-ohms = <2000000>;
 		full-ohms = <(2000000 + 806000)>;
-	};
-
-	kscan: kscan0 {
-		compatible = "zmk,kscan-composite";
-		// label = "KSCAN";
-		rows = <3>;
-		columns = <3>;
-
-		matrix: matrix {
-			kscan = <&matrix_kscan>;
-		};
 	};
 
 	matrix_kscan: kscan1 {
@@ -80,8 +70,6 @@
 &gpio1 {
 	status = "okay";
 };
-
-/delete-node/ &cdc_acm_uart;
 
 &usbd {
 	status = "okay";
