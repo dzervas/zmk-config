@@ -26,9 +26,6 @@ config ZMK_USB
 config ZMK_KSCAN_MATRIX_POLLING
 	default y
 
-config ZMK_KSCAN_COMPOSITE_DRIVER
-	default y
-
 config ZMK_BATTERY_VOLTAGE_DIVIDER
 	default y
 
