@@ -8,22 +8,15 @@
 #include <dt-bindings/zmk/matrix_transform.h>
 #include "lab68_mcuboot.overlay"
 
-// &pinctrl {
-// 	i2c0_default: i2c0_default {
-// 		group1 {
-// 			psels = <NRF_PSEL(TWIM_SDA, 0, 26)>, <NRF_PSEL(TWIM_SCL, 0, 27)>;
-// 			bias-pull-up;
-// 		};
-// 	};
-
-// 	i2c0_sleep: i2c0_sleep {
-// 		group1 {
-// 			psels = <NRF_PSEL(TWIM_SDA, 0, 26)>, <NRF_PSEL(TWIM_SCL, 0, 27)>;
-// 			low-power-enable;
-// 			bias-pull-up;
-// 		};
-// 	};
-// };
+&pinctrl {
+    qdec_default: qdec_default {
+        group1 {
+            psels = <NRF_PSEL(QDEC_A, 0, 30 )>,
+                    <NRF_PSEL(QDEC_B, 0, 31)>;
+            bias-pull-up;
+        };
+    };
+};
 
 / {
 	model = "Lab68";
@@ -67,7 +60,7 @@
 			kscan = <&matrix_kscan>;
 		};
 
-		encoder: encoder {
+		encoder_button: encoder {
 			kscan = <&encoder_kscan>;
 			column-offset = <15>;
 		};
@@ -124,19 +117,14 @@ RC(3,0) RC(3,1) RC(3,2) RC(3,3) RC(3,4) RC(3,5) RC(3,6) RC(3,7) RC(3,8)  RC(3,9)
 RC(4,0) RC(4,1) RC(4,2)                 RC(4,5)                 RC(4,8)  RC(4,9) RC(4,10) RC(4,11)          RC(4,13) RC(4,14)
 		>;
 	};
-
-
-	encoder0: encoder0 {
-		compatible = "alps,ec11";
-		label = "MAIN_ENCODER";
-		a-gpios = <&gpio0 30 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-		b-gpios = <&gpio0 31 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-		// resolution = <2>;
-	};
 };
 
-&encoder0 {
+encoder: &qdec0 {
 	status = "okay";
+	led-pre = <0>;
+	steps = <80>;
+	pinctrl-0 = <&qdec_default>;
+	pinctrl-names = "default";
 };
 
 &i2c0 {

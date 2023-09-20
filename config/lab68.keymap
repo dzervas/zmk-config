@@ -14,25 +14,24 @@
 #define FUNC 1
 
 / {
-    /*
     sensors {
         compatible = "zmk,keymap-sensors";
-        sensors = <&encoder0>;
+        sensors = <&encoder>;
+        triggers-per-rotation = <20>;
     };
-    */
 
     keymap {
         compatible = "zmk,keymap";
 
         default_layer {
             bindings = <
-&kp GRAVE  &kp N1   &kp N2   &kp N3 &kp N4 &kp N5    &kp N6 &kp N7 &kp N8    &kp N9   &kp N0    &kp MINUS  &kp EQUAL &kp BSLH &kp DEL  &kp RET
+&kp GRAVE  &kp N1   &kp N2   &kp N3 &kp N4 &kp N5    &kp N6 &kp N7 &kp N8    &kp N9   &kp N0    &kp MINUS  &kp EQUAL &kp BSLH &kp DEL  &kp C_PP
 &kp TAB    &kp Q    &kp W    &kp E  &kp R  &kp T     &kp Y  &kp U  &kp I     &kp O    &kp P     &kp LBKT   &kp RBKT  &kp BSPC &kp PG_UP
 &kp ESC    &kp A    &kp S    &kp D  &kp F  &kp G     &kp H  &kp J  &kp K     &kp L    &kp SEMI  &kp SQT    &kp RET            &kp PG_DN
 &kp LSHIFT &kp Z    &kp X    &kp C  &kp V  &kp B     &kp N  &kp M  &kp COMMA &kp DOT  &kp FSLH  &kp RSHIFT &kp UP             &kp INSERT
 &kp LCTRL  &kp LGUI &kp LALT               &kp SPACE               &mo FUNC  &kp RALT &kp RCTRL &kp LEFT   &kp DOWN           &kp RIGHT
             >;
-            //sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
 
         func_layer {
@@ -43,7 +42,7 @@
 &kp LSHIFT        &out OUT_USB &kp C_PP     &kp C_STOP   &kp C_PREV   &kp C_NEXT &kp C_VOL_DN &kp C_VOL_UP &kp C_MUTE &trans    &trans    &trans                  &trans &trans
 &kp LCTRL         &kp LGUI     &kp LALT                               &kp SPACE                            &none      &kp RALT  &kp RCTRL &bt BT_PRV              &trans &bt BT_NXT
             >;
-            //sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+            sensor-bindings = <&inc_dec_kp C_PREV C_NEXT>;
         };
     };
 };
