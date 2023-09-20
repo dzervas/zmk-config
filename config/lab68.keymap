@@ -42,7 +42,7 @@
 &kp LSHIFT        &out OUT_USB &kp C_PP     &kp C_STOP   &kp C_PREV   &kp C_NEXT &kp C_VOL_DN &kp C_VOL_UP &kp C_MUTE &trans    &trans    &trans                  &trans &trans
 &kp LCTRL         &kp LGUI     &kp LALT                               &kp SPACE                            &none      &kp RALT  &kp RCTRL &bt BT_PRV              &trans &bt BT_NXT
             >;
-            sensor-bindings = <&inc_dec_kp C_PREV C_NEXT>;
+            sensor-bindings = <&inc_dec_kp C_NEXT C_PREV>;
         };
     };
 };
