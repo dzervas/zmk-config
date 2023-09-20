@@ -13,7 +13,7 @@
 	compatible = "dzervas,launchpad";
 
 	chosen {
-		zmk,kscan = &matric_kscan;
+		zmk,kscan = &matrix_kscan;
 		zmk,battery = &vbatt;
 		zephyr,console = &cdc_acm_uart;
 		zephyr,code-partition = &slot0_partition;
